@@ -7,6 +7,7 @@ package sp50;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -20,29 +21,30 @@ public class calE {
     ArrayList<Double> list = new ArrayList<>();
     menu m = new menu();
     Scanner sc = new Scanner(System.in);
+
     //*******DRIVER*******
-    void run(){
+    void run() {
         int choice = m.getChoice();
         switch (choice) {
             case 1:
                 list = calculateEquation();
-                System.out.println(list);
-                isOdd(list);
-                isEven(list);
+                display(isOdd(list));
+                display(isEven(list));
                 System.out.println();
-                isPerfectSquare(list);
+                display(isPerfectSquare(list));
                 break;
             case 2:
                 list = calculateQuadraticEquation();
-                isOdd(list);
-                isEven(list);
+                display(isOdd(list));
+                display(isEven(list));
                 System.out.println();
-                isPerfectSquare(list);
+                display(isPerfectSquare(list));
                 break;
             case 3:
                 System.exit(0);
         }
     }
+
     ArrayList<Double> calculateEquation() {
 
         double a = v.getInput("Enter A: ");
@@ -51,6 +53,8 @@ public class calE {
 
         if (a != 0) {
             result = -b / a;
+        } else if (a == 0 && b == 0) {
+            return list;
         } else {
             return null;
         }
@@ -67,9 +71,9 @@ public class calE {
         double result1 = 0;
         double result2 = 0;
         double delta = Math.pow(b, 2) - 4 * a * c;
-
+        if(a!=0){
         if (delta < 0) {
-            System.out.println("The Equation has no root.");
+            return null;
         } else if (delta > 0) {
             result1 = (-b - Math.sqrt(delta));
             result2 = (-b + Math.sqrt(delta));
@@ -80,7 +84,10 @@ public class calE {
             result1 = result2 = -b / (2 * a);
             System.out.println("Solution: " + "x = " + result1);
         }
-
+        }else{
+            System.out.println("a must not equals 0");
+            System.exit(0);
+        }
         list.add(a);
         list.add(b);
         list.add(c);
@@ -90,30 +97,33 @@ public class calE {
         return list;
     }
 
-    void isOdd(ArrayList<Double> list) {
+    ArrayList<Double> isOdd(ArrayList<Double> list) {
         ArrayList<Double> oddList = new ArrayList<>();
+        checkList(list);
         System.out.print("Odd Number(s): ");
         for (double value : list) {
             if (value % 2 != 0) {
                 oddList.add(value);
             }
         }
-        display(oddList);
+        return oddList;
     }
 
-    void isEven(ArrayList<Double> list) {
+    ArrayList<Double> isEven(ArrayList<Double> list) {
         ArrayList<Double> evenList = new ArrayList<>();
+        checkList(list);
         System.out.print("Number is Even: ");
         for (double value : list) {
             if (value % 2 == 0) {
                 evenList.add(value);
             }
         }
-        display(evenList);
+        return evenList;
     }
 
-    void isPerfectSquare(ArrayList<Double> list) {
+    ArrayList<Double> isPerfectSquare(ArrayList<Double> list) {
         ArrayList<Double> squareList = new ArrayList<>();
+        checkList(list);
         System.out.print("Number is Perfect Square: ");
         for (double value : list) {
             double sr = Math.sqrt(value);
@@ -122,7 +132,17 @@ public class calE {
                 squareList.add(value);
             }
         }
-        display(squareList);
+        return squareList;
+    }
+
+    void checkList(ArrayList<Double> list) {
+        if (list == null) {
+            System.out.println("The equation has no solution");
+            System.exit(0);
+        } else if (list.isEmpty()) {
+            System.out.println("The Equation has infinite solution");
+            System.exit(0);
+        }
     }
 
     public void display(ArrayList<Double> list) {
